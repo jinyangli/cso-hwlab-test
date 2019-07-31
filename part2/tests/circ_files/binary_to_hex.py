@@ -15,6 +15,12 @@ def main(args):
 	results = []
 	for l in lines:
 		hexes = list(map(mapper,l.split()))
+		x = 0
+		for h in hexes:
+			if h != '0':
+				x+=1
+		print ("nonzeros ", x, " len ", len(hexes))
+		#print(hexes)
 		ra = ''.join(hexes[:8])
 		sp = ''.join(hexes[8:16])
 		t0 = ''.join(hexes[16:24])
