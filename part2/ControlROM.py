@@ -1,6 +1,5 @@
 import sys
 
-# ["name", "opcode", "f3", "f7/imm"]
 ALUSels = { "add": 0x0, \
 	 "and": 0x1,\
 	"or": 0x2, \
@@ -37,10 +36,11 @@ class Inst:
 	def GetControlAddr(self):
 		address = self.opcode >> 2
 		address |= (self.f3<<5)
-		address |= (self.f7imm & 0x01)<<8
-		address |= (self.f7imm & 0x10)<<9
+		address |= ((self.f7imm & 0x01)<<8)
+		address |= ((self.f7imm & 0x20)<<4)
 		return address
 
+# ["name", "opcode", "f3", "f7/imm"]
 instructions = [Inst("R", "add", 0x33, 0x0, 0x00), \
 		Inst("R", "mult", 0x33, 0x0, 0x01),\
 		Inst("R", "sub", 0x33, 0x0, 0x20),\
@@ -54,11 +54,12 @@ instructions = [Inst("R", "add", 0x33, 0x0, 0x00), \
 		Inst("R", "or", 0x33, 0x6, 0x00),\
 		Inst("R", "remu", 0x33, 0x7, 0x01),\
 		Inst("R", "and", 0x33, 0x7, 0x00), \
-		Inst("I", "addi", 0x13, 0x7, 0x00) ] # addi has don't care f7/imm
+		Inst("I", "addi", 0x13, 0x0, 0x00) ] # addi has don't care f7/imm
 
 def main(args):
 	results = []
 	for i in instructions:
+		print i.name, " ", hex(i.GetControlAddr()), " ", hex(i.GetControlValue())
 		results.append((i.GetControlAddr(), i.GetControlValue()))
 	results.sort()
 	for a,b in results:
